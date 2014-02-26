@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <script src='vendor/three.js/build/three-min.js'></script>
+<script src='bower_components/threex.suzanne/threex.suzanne.js'></script>
 <script src='../threex.domevents.js'></script>
-<body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'><script>
+<body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'>
+<div style='position: absolute; padding-left: 10px; font-size:200%;'>
+	<strong>Received Events :</strong>
+	<div id='logs'></div>
+</div>
+<script>
 	var renderer	= new THREE.WebGLRenderer()
 	renderer.setSize( window.innerWidth, window.innerHeight )
 	document.body.appendChild( renderer.domElement )
@@ -12,14 +18,24 @@
 	camera.position.z = 3
 	
 	//////////////////////////////////////////////////////////////////////////////////
-	//		add an object and make it move					//
-	//////////////////////////////////////////////////////////////////////////////////	
-	var geometry	= new THREE.CubeGeometry( 1, 1, 1);
-	var material	= new THREE.MeshNormalMaterial();
-	var mesh	= new THREE.Mesh( geometry, material );
-	scene.add( mesh );
+	//		set 3 point lighting						//
+	//////////////////////////////////////////////////////////////////////////////////
 
-	
+	;(function(){
+		// add a ambient light
+		var light	= new THREE.AmbientLight( 0x020202 )
+		scene.add( light )
+		// add a light in front
+		var light	= new THREE.DirectionalLight('white', 1)
+		light.position.set(0.5, 0.5, 2)
+		scene.add( light )
+		// add a light behind
+		var light	= new THREE.DirectionalLight('white', 0.75)
+		light.position.set(-0.5, -0.5, -2)
+		scene.add( light )		
+	})()
+
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		init domEvents							//
 	//////////////////////////////////////////////////////////////////////////////////
@@ -30,10 +46,34 @@
 	//		comment								//
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	var domEvents	= new THREEx.DomEvents(camera, renderer.domElement);
-	domEvents.addEventListener(mesh, 'click', function(event){
-		console.log('you clicked on mesh', mesh)
-	}, false)
+	THREEx.Suzanne.baseUrl	= 'bower_components/threex.suzanne/'
+	new THREEx.Suzanne.GeometryLoader(function onLoad(geometry){
+		// notify the geometry need to update normals
+		geometry.computeFaceNormals()
+		geometry.computeVertexNormals()
+		geometry.normalsNeedUpdate	= true
+		// create a mesh with it
+		var material	= new THREE.MeshPhongMaterial({
+			shading	: THREE.SmoothShading,
+		})
+		var mesh	= new THREE.Mesh( geometry, material )
+		mesh.scale.multiplyScalar(2)
+		// attach mesh to the scene
+		scene.add(mesh)
+
+		//////////////////////////////////////////////////////////////////////////////////
+		//		display the events log						//
+		//////////////////////////////////////////////////////////////////////////////////
+		
+		THREEx.DomEvents.eventNames.forEach(function(eventName){
+			if( eventName === 'mousemove' )	return
+			domEvents.addEventListener(mesh, eventName, function(event){
+				var domElement	= document.querySelector('#logs')
+				domElement.innerHTML	= event.type + '<br/>' + domElement.innerHTML
+			}, false)
+		})
+	})
+	
 
 
 	//////////////////////////////////////////////////////////////////////////////////

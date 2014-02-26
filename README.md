@@ -10,7 +10,7 @@ Currently, the available events are
 
 
 Show Don't Tell
-===============
+=============== 
 * [examples/basic.html](http://jeromeetienne.github.io/threex.domevents/examples/basic.html)
 \[[view source](https://github.com/jeromeetienne/threex.domevents/blob/master/examples/basic.html)\] :
 It shows a simple usage of ```threex..

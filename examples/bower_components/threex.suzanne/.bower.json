@@ -1,0 +1,14 @@
+{
+  "name": "threex.suzanne",
+  "homepage": "https://github.com/jeromeetienne/threex.suzanne",
+  "_release": "70279fc543",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "70279fc54307b659c3e1c9085873f7603886cc7d"
+  },
+  "_source": "git://github.com/jeromeetienne/threex.suzanne.git",
+  "_target": "*",
+  "_originalSource": "threex.suzanne",
+  "_direct": true
+}

@@ -1,37 +1,28 @@
 <!DOCTYPE html>
-<script src='vendor/three.js/build/three-min.js'></script>
-<script src='../threex.domevents.js'></script>
-<script src='../threex.linkify.js'></script>
+<script src='vendor/three.js/build/three.js'></script>
+<script src='../threex.suzanne.js'></script>
 <body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'><script>
 	var renderer	= new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
 
-	var onRenderFcts= [];
+	var updateFcts	= [];
 	var scene	= new THREE.Scene();
-	var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000);
-	camera.position.z = 3;
+	var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100 );
+	camera.position.z = 1.5;
+	
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	//		comment								//
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	var domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
-
-	//////////////////////////////////////////////////////////////////////////////////
-	//		add an object and make it move					//
-	//////////////////////////////////////////////////////////////////////////////////	
-	var geometry	= new THREE.SphereGeometry( 0.5 )
-	var material	= new THREE.MeshNormalMaterial()
-	var mesh	= new THREE.Mesh( geometry, material )
-	scene.add( mesh ) 
-
-	//////////////////////////////////////////////////////////////////////////////////
-	//		linkify our cube						//
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	var url	= 'http://jeromeetienne.github.io/threex/'
-	THREEx.Linkify(domEvents, mesh, url)
+	new THREEx.Suzanne.GeometryLoader(function onLoad(geometry){
+		// create a mesh with it
+		var material	= new THREE.MeshNormalMaterial()
+		var mesh	= new THREE.Mesh( geometry, material )
+		// attach mesh to the scene
+		scene.add(mesh)
+	})
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Camera Controls							//
@@ -41,7 +32,7 @@
 		mouse.x	= (event.clientX / window.innerWidth ) - 0.5
 		mouse.y	= (event.clientY / window.innerHeight) - 0.5
 	}, false)
-	onRenderFcts.push(function(delta, now){
+	updateFcts.push(function(delta, now){
 		camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3)
 		camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3)
 		camera.lookAt( scene.position )
@@ -51,7 +42,7 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the scene						//
 	//////////////////////////////////////////////////////////////////////////////////
-	onRenderFcts.push(function(){
+	updateFcts.push(function(){
 		renderer.render( scene, camera );		
 	})
 	
@@ -67,8 +58,8 @@
 		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
 		lastTimeMsec	= nowMsec
 		// call each update function
-		onRenderFcts.forEach(function(onRenderFct){
-			onRenderFct(deltaMsec/1000, nowMsec/1000)
+		updateFcts.forEach(function(updateFn){
+			updateFn(deltaMsec/1000, nowMsec/1000)
 		})
 	})
 </script></body>
