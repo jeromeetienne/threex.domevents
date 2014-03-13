@@ -39,7 +39,7 @@ THREEx.Linkify	= function(domEvents, mesh, url, withBoundingBox){
 	this.eventTarget= eventTarget
 	domEvents.bind(eventTarget, 'click', function(event){
 		window.open(url, '_blank');
-	});
+	})
 
 	// bind 'mouseover'
 	domEvents.bind(eventTarget, 'mouseover', function(event){
