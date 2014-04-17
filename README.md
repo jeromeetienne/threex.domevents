@@ -11,6 +11,9 @@ Currently, the available events are
 
 Show Don't Tell
 =============== 
+* [examples/demo.html](http://jeromeetienne.github.io/threex.domevents/examples/demo.html)
+\[[view source](https://github.com/jeromeetienne/threex.domevents/blob/master/examples/demo.html)\] :
+It shows a demo showing up this extension.
 * [examples/basic.html](http://jeromeetienne.github.io/threex.domevents/examples/basic.html)
 \[[view source](https://github.com/jeromeetienne/threex.domevents/blob/master/examples/basic.html)\] :
 It shows a simple usage of ```threex..
