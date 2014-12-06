@@ -258,9 +258,27 @@ THREEx.DomEvents.prototype._onMove	= function(eventName, mouseX, mouseY, origDom
 	var boundObjs	= this._boundObjs[eventName];
 	if( boundObjs === undefined || boundObjs.length === 0 )	return;
 	// compute the intersection
-	var vector	= new THREE.Vector3( mouseX, mouseY, 0.5 );
-	var ray         = this._projector.pickingRay( vector, this._camera );
-	var intersects  = ray.intersectObjects( boundObjs );
+	var vector = new THREE.Vector3();
+	var raycaster = new THREE.Raycaster();
+	var dir = new THREE.Vector3();
+
+	if ( this._camera instanceof THREE.OrthographicCamera ) {
+
+	    vector.set( mouseX, mouseY, -1 );
+	    vector.unproject( this._camera );
+	    dir.set( 0, 0, - 1 ).transformDirection( this._camera.matrixWorld );
+	    raycaster.set( vector, dir );
+
+	} else if ( this._camera instanceof THREE.PerspectiveCamera ) {
+
+	    vector.set( mouseX, mouseY, 0.5 );
+	    vector.unproject( this._camera );
+	    raycaster.set( this._camera.position, vector.sub( this._camera.position ).normalize() );
+	}
+
+	var intersects = raycaster.intersectObjects( boundObjs );
+
+
 
 	var oldSelected	= this._selected;
 	
@@ -302,23 +320,44 @@ THREEx.DomEvents.prototype._onMove	= function(eventName, mouseX, mouseY, origDom
 
 THREEx.DomEvents.prototype._onEvent	= function(eventName, mouseX, mouseY, origDomEvent)
 {
-//console.log('eventName', eventName, 'boundObjs', this._boundObjs[eventName])
+	//console.log('eventName', eventName, 'boundObjs', this._boundObjs[eventName])
 	// get objects bound to this event
 	var boundObjs	= this._boundObjs[eventName];
 	if( boundObjs === undefined || boundObjs.length === 0 )	return;
 	// compute the intersection
-	var vector	= new THREE.Vector3( mouseX, mouseY, 0.5 );
-	var ray         = this._projector.pickingRay( vector, this._camera );
-	var intersects  = ray.intersectObjects( boundObjs );
+	var vector = new THREE.Vector3();
+	var raycaster = new THREE.Raycaster();
+	var dir = new THREE.Vector3();
 
+	if ( this._camera instanceof THREE.OrthographicCamera ) {
 
+	    vector.set( mouseX, mouseY, -1 );
+	    vector.unproject( this._camera );
+	    dir.set( 0, 0, - 1 ).transformDirection( this._camera.matrixWorld );
+	    raycaster.set( vector, dir );
+
+	} else if ( this._camera instanceof THREE.PerspectiveCamera ) {
+
+	    vector.set( mouseX, mouseY, 0.5 );
+	    vector.unproject( this._camera );
+	    raycaster.set( this._camera.position, vector.sub( this._camera.position ).normalize() );
+	}
+
+	var intersects = raycaster.intersectObjects( boundObjs, true);
 	// if there are no intersections, return now
 	if( intersects.length === 0 )	return;
 
-	// init some vairables
+	// init some variables
 	var intersect	= intersects[0];
 	var object3d	= intersect.object;
 	var objectCtx	= this._objectCtxGet(object3d);
+	var objectParent = object3d.parent;
+
+	while ( typeof(objectCtx) == 'undefined' && objectParent )
+	{
+	    objectCtx = this._objectCtxGet(objectParent);
+	    objectParent = objectParent.parent;
+	}
 	if( !objectCtx )	return;
 
 	// notify handlers
@@ -433,4 +472,3 @@ THREEx.DomEvents.prototype._onTouchEvent	= function(eventName, domEvent)
 	var mouseY	= -(domEvent.touches[ 0 ].pageY / window.innerHeight) * 2 + 1;
 	this._onEvent(eventName, mouseX, mouseY, domEvent);	
 }
-
