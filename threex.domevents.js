@@ -13,7 +13,7 @@
 //
 // First you include it in your page
 //
-// ```<script src='threex.domevent.js'></script>```
+// ```<script src='threex.domevent.js'>< /script>```
 //
 // # use the object oriented api
 //
