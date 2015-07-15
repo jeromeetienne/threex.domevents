@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<script src='vendor/three.js/build/three-min.js'></script>
+<script src='vendor/three.js/build/three.min.js'></script>
+<script src='vendor/three.js/examples/js/Projector.js'></script>
 <script src='../threex.domevents.js'></script>
 <body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'><script>
 	var renderer	= new THREE.WebGLRenderer()
@@ -14,7 +15,7 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	//		add an object and make it move					//
 	//////////////////////////////////////////////////////////////////////////////////	
-	var geometry	= new THREE.CubeGeometry( 1, 1, 1);
+	var geometry	= new THREE.BoxGeometry( 1, 1, 1);
 	var material	= new THREE.MeshNormalMaterial();
 	var mesh	= new THREE.Mesh( geometry, material );
 	scene.add( mesh );
