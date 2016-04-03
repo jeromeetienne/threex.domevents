@@ -13,7 +13,7 @@
 //
 // First you include it in your page
 //
-// ```<script src='threex.domevent.js'><  /script>```
+// ```<script src='threex.domevent.js'>< /script>```
 //
 // # use the object oriented api
 //
@@ -72,7 +72,7 @@ THREEx.DomEvents	= function(camera, domElement)
 {
 	this._camera	= camera || null;
 	this._domElement= domElement || document;
-	this._projector	= new THREE.Projector();
+	this._raycaster = new THREE.Raycaster();
 	this._selected	= null;
 	this._boundObjs	= {};
 	// Bind dom event for mouse and touch
@@ -258,27 +258,13 @@ THREEx.DomEvents.prototype._onMove	= function(eventName, mouseX, mouseY, origDom
 	var boundObjs	= this._boundObjs[eventName];
 	if( boundObjs === undefined || boundObjs.length === 0 )	return;
 	// compute the intersection
-	var vector = new THREE.Vector3();
-	var raycaster = new THREE.Raycaster();
-	var dir = new THREE.Vector3();
+	var vector = new THREE.Vector2();
 
-	if ( this._camera instanceof THREE.OrthographicCamera ) {
+	// update the picking ray with the camera and mouse position
+	vector.set( mouseX, mouseY );
+	this._raycaster.setFromCamera( vector, this._camera );	
 
-	    vector.set( mouseX, mouseY, -1 );
-	    vector.unproject( this._camera );
-	    dir.set( 0, 0, - 1 ).transformDirection( this._camera.matrixWorld );
-	    raycaster.set( vector, dir );
-
-	} else if ( this._camera instanceof THREE.PerspectiveCamera ) {
-
-	    vector.set( mouseX, mouseY, 0.5 );
-	    vector.unproject( this._camera );
-	    raycaster.set( this._camera.position, vector.sub( this._camera.position ).normalize() );
-	}
-
-	var intersects = raycaster.intersectObjects( boundObjs );
-
-
+	var intersects = this._raycaster.intersectObjects( boundObjs );
 
 	var oldSelected	= this._selected;
 	
@@ -325,25 +311,13 @@ THREEx.DomEvents.prototype._onEvent	= function(eventName, mouseX, mouseY, origDo
 	var boundObjs	= this._boundObjs[eventName];
 	if( boundObjs === undefined || boundObjs.length === 0 )	return;
 	// compute the intersection
-	var vector = new THREE.Vector3();
-	var raycaster = new THREE.Raycaster();
-	var dir = new THREE.Vector3();
+	var vector = new THREE.Vector2();
 
-	if ( this._camera instanceof THREE.OrthographicCamera ) {
+	// update the picking ray with the camera and mouse position
+	vector.set( mouseX, mouseY );
+	this._raycaster.setFromCamera( vector, this._camera );	
 
-	    vector.set( mouseX, mouseY, -1 );
-	    vector.unproject( this._camera );
-	    dir.set( 0, 0, - 1 ).transformDirection( this._camera.matrixWorld );
-	    raycaster.set( vector, dir );
-
-	} else if ( this._camera instanceof THREE.PerspectiveCamera ) {
-
-	    vector.set( mouseX, mouseY, 0.5 );
-	    vector.unproject( this._camera );
-	    raycaster.set( this._camera.position, vector.sub( this._camera.position ).normalize() );
-	}
-
-	var intersects = raycaster.intersectObjects( boundObjs, true);
+	var intersects = this._raycaster.intersectObjects( boundObjs, true);
 	// if there are no intersections, return now
 	if( intersects.length === 0 )	return;
 
