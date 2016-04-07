@@ -122,7 +122,9 @@ THREEx.DomEvents.eventNames	= [
 	"mousemove",
 	"mousedown",
 	"mouseup",
-	"contextmenu"
+	"contextmenu",
+	"touchstart",
+	"touchend"
 ];
 
 THREEx.DomEvents.prototype._getRelativeMouseXY	= function(domEvent){
@@ -420,8 +422,8 @@ THREEx.DomEvents.prototype._onContextmenu	= function(event)
 // # handle touch events
 
 
-THREEx.DomEvents.prototype._onTouchStart	= function(event){ return this._onTouchEvent('mousedown', event);	}
-THREEx.DomEvents.prototype._onTouchEnd	= function(event){ return this._onTouchEvent('mouseup'	, event);	}
+THREEx.DomEvents.prototype._onTouchStart	= function(event){ return this._onTouchEvent('touchstart', event);	}
+THREEx.DomEvents.prototype._onTouchEnd	= function(event){ return this._onTouchEvent('touchend'	, event);	}
 
 THREEx.DomEvents.prototype._onTouchMove	= function(domEvent)
 {
