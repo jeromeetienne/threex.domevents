@@ -114,6 +114,13 @@ THREEx.DomEvents.prototype.destroy	= function()
 	this._domElement.removeEventListener( 'contextmenu'	, this._$onContextmenu	, false );
 }
 
+// #  Adds the offset y in the event of a canvas that has scrolling page capabilities.
+THREEx.DomEvents.prototype.addScrollOffset = function(offset)
+{
+	this._addScrollOffsetY = offset;
+}
+
+
 THREEx.DomEvents.eventNames	= [
 	"click",
 	"dblclick",
@@ -158,7 +165,7 @@ THREEx.DomEvents.prototype._getRelativeMouseXY	= function(domEvent){
 	
 	return {
 		x : +((domEvent.pageX - elPosition.x) / elDimension.width ) * 2 - 1,
-		y : -((domEvent.pageY - elPosition.y) / elDimension.height) * 2 + 1
+		y : -(((domEvent.pageY + this._addScrollOffsetY) - elPosition.y) / elDimension.height) * 2 + 1
 	};
 };
 
