@@ -43,7 +43,7 @@ Let's start by bindinf dom events like on 3d objects.
 
 ## THREEx.DomEvent.js
 
-First you need to instanciate the layer, like this.
+First you need to instantiate the layer, like this.
 
 ```
 var domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
@@ -102,7 +102,7 @@ The parameters are
 * ```url```: a string of the url
 * ```withBoundingBox```: true if you bind the bounding box and not the mesh itself. It 
 may be useful when your mesh is complex. useful because it is faster to test for 
-simple mesh, usefull as it make the detections less flacky for the users for complex meshes.
+simple mesh, useful as it make the detections less flacky for the users for complex meshes.
 
 
 Additionnaly you can use ```linkify.destroy()``` to stop listening on those events.

@@ -47,7 +47,7 @@
 // standalone API. In fact, the object oriented API is just a thin wrapper
 // on top of the standalone API.
 //
-// First, you instanciate the object
+// First, you instantiate the object
 //
 // ```var domEvent = new THREEx.DomEvent();```
 // 
