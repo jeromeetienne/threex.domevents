@@ -279,10 +279,10 @@ THREEx.DomEvents.prototype._onMove	= function(eventName, mouseX, mouseY, origDom
 		notifyMove	= this._bound('mousemove', newSelected);
 
 		if( oldSelected != newSelected ){
-			// if newSelected bound mouseenter, notify it
-			notifyOver	= this._bound('mouseover', newSelected);
 			// if there is a oldSelect and oldSelected bound mouseleave, notify it
 			notifyOut	= oldSelected && this._bound('mouseout', oldSelected);
+			// if newSelected bound mouseenter, notify it
+			notifyOver	= this._bound('mouseover', newSelected);
 		}
 	}else{
 		// if there is a oldSelect and oldSelected bound mouseleave, notify it
@@ -293,10 +293,10 @@ THREEx.DomEvents.prototype._onMove	= function(eventName, mouseX, mouseY, origDom
 
 	// notify mouseMove - done at the end with a copy of the list to allow callback to remove handlers
 	notifyMove && this._notify('mousemove', newSelected, origDomEvent, intersect);
-	// notify mouseEnter - done at the end with a copy of the list to allow callback to remove handlers
-	notifyOver && this._notify('mouseover', newSelected, origDomEvent, intersect);
 	// notify mouseLeave - done at the end with a copy of the list to allow callback to remove handlers
 	notifyOut  && this._notify('mouseout' , oldSelected, origDomEvent, intersect);
+	// notify mouseEnter - done at the end with a copy of the list to allow callback to remove handlers
+	notifyOver && this._notify('mouseover', newSelected, origDomEvent, intersect);
 }
 
 
@@ -395,8 +395,8 @@ THREEx.DomEvents.prototype._onMouseMove	= function(domEvent)
 {
 	var mouseCoords = this._getRelativeMouseXY(domEvent);
 	this._onMove('mousemove', mouseCoords.x, mouseCoords.y, domEvent);
-	this._onMove('mouseover', mouseCoords.x, mouseCoords.y, domEvent);
 	this._onMove('mouseout' , mouseCoords.x, mouseCoords.y, domEvent);
+	this._onMove('mouseover', mouseCoords.x, mouseCoords.y, domEvent);
 }
 
 THREEx.DomEvents.prototype._onClick		= function(event)
@@ -434,8 +434,8 @@ THREEx.DomEvents.prototype._onTouchMove	= function(domEvent)
 	var mouseX	= +(domEvent.touches[ 0 ].pageX / window.innerWidth ) * 2 - 1;
 	var mouseY	= -(domEvent.touches[ 0 ].pageY / window.innerHeight) * 2 + 1;
 	this._onMove('mousemove', mouseX, mouseY, domEvent);
-	this._onMove('mouseover', mouseX, mouseY, domEvent);
 	this._onMove('mouseout' , mouseX, mouseY, domEvent);
+	this._onMove('mouseover', mouseX, mouseY, domEvent);
 }
 
 THREEx.DomEvents.prototype._onTouchEvent	= function(eventName, domEvent)
